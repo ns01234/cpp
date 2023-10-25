@@ -9,8 +9,9 @@ public:
     string coordinate;
     string name;
     string color;
-    bool dangerw;
-    bool dangerb;
+    bool dangerw = false;
+    bool dangerb = false;
+    bool can_play = true;
     virtual string getType(){
         return "";
     }
