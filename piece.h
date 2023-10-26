@@ -11,7 +11,7 @@ public:
     string color;
     bool dangerw = false;
     bool dangerb = false;
-    bool can_play = true;
+    bool is_played = false;
     virtual string getType(){
         return "";
     }

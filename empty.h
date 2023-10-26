@@ -6,6 +6,9 @@
 class Empty : public Piece {
 public:
 
+    Empty(std::string n){
+        this->coordinate = n;
+    }
     std::string getType(){
         return "empty";
     }

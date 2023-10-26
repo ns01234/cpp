@@ -7,6 +7,7 @@ using namespace std;
 
 class Rook : public Piece {
 public:
+    bool is_played = false;
     Rook(string n, string color){
         this->coordinate = n;
         this->name = "R";

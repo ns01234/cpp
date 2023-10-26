@@ -5,6 +5,7 @@
 
 class King : public Piece {
 public:
+    bool is_played = false;
     King(std:: string n, std::string color){
         this->coordinate = n;
         this->name = "K";
