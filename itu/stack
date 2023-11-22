@@ -1,0 +1,75 @@
+#include "MyStack.hpp"
+#include <iostream>
+
+using namespace std;
+
+MyStack::MyStack()
+{
+    head = nullptr;
+    numNodes = 0;
+}
+
+MyStack::~MyStack()
+{
+    while (this->numNodes > 0)
+        this->pop();
+}
+
+void MyStack::push(Node *node)
+{
+    Node *temp = head;
+    head = node;
+    head->next = temp;
+
+    // node->next = head;
+    // head = node;
+    
+    numNodes++;
+}
+
+void MyStack::pop()
+{
+    // Notice that we are deleting node that might be just accessed and used in the main via front()
+    // So, be aware when you use this function
+    if (head == nullptr)
+        return;
+
+    Node *temp = head;
+    head = head->next;
+    delete temp;
+    numNodes--;
+}
+
+Node* MyStack::top()
+{
+    return head;
+}
+
+bool MyStack::empty()
+{
+    return head == nullptr;
+}
+
+int MyStack::size()
+{
+    return numNodes;
+}
+
+void MyStack::print()
+{
+    Node *temp = head;
+
+    if (temp == nullptr)
+    {
+        cout << "Empty" << endl;
+        return;
+    }
+
+    while (temp != nullptr)
+    {
+        cout << " - ";
+        temp->print();
+        temp = temp->next;
+    }
+    cout << " - " <<endl;
+}
