@@ -1,0 +1,76 @@
+#include "MyPseudoQueue.hpp"
+
+void MyPseudoQueue::_dumpStack1ToStack2()
+{
+    while (!stack1.empty())
+    {
+        Node *temp = new Node(stack1.top()->getValue(), stack1.top()->getName());
+        stack2.push(temp);
+        stack1.pop();
+    }
+}
+
+void MyPseudoQueue::_dumpStack2ToStack1()
+{
+    while (!stack2.empty())
+    {
+        Node *temp = new Node(stack2.top()->getValue(), stack2.top()->getName());
+        stack1.push(temp);
+        stack2.pop();
+    }
+}
+
+MyPseudoQueue::MyPseudoQueue()
+{
+}
+
+MyPseudoQueue::~MyPseudoQueue()
+{
+}
+
+void MyPseudoQueue::enqueue(Node *node)
+{
+    // Dump stack2 into stack1
+    _dumpStack2ToStack1();
+
+    stack1.push(node);
+}
+
+void MyPseudoQueue::dequeue()
+{
+    // Dump stack1 into stack2
+    _dumpStack1ToStack2();
+
+    // Pop top of stack2
+    stack2.pop();
+}
+
+Node* MyPseudoQueue::front()
+{
+    // If we recently called dequeue or front, stack2 will have the front
+    if (!stack2.empty())
+        return stack2.top();
+    else
+    {
+        // Dump stack1 into stack2
+        _dumpStack1ToStack2();
+
+        return stack2.top();
+    }
+}
+
+bool MyPseudoQueue::empty()
+{
+    return stack1.empty() && stack2.empty();
+}
+
+int MyPseudoQueue::size()
+{
+    return stack1.size() + stack2.size();
+}
+
+void MyPseudoQueue::print()
+{
+    _dumpStack2ToStack1();
+    stack1.print();
+}
