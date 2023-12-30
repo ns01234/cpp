@@ -2,6 +2,10 @@
 #include <vector>
 using namespace std;
 
+// this file is created to check regular expression
+// '.' means current character can be every letter
+// 'x*' means the preceding character x can occur in any number
+
 bool rec(string s, string p, int l1, int l2, vector<vector<int>>& dp) {
 
     if (dp[l1][l2] != -1)
