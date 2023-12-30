@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+bool rec(string s, string p, int l1, int l2, vector<vector<int>>& dp) {
+
+    if (dp[l1][l2] != -1)
+        return dp[l1][l2];
+
+    if (l1 == s.length() && l2 == p.length()) {
+
+        dp[l1][l2] = 1;
+        return true;
+    }
+    
+    if (l2 == p.length() && l1 != s.length()) {
+
+        dp[l1][l2] = 0;
+        return false;
+    }
+
+    if (l2 + 1 < p.length() && p[l2+1] == '*') {
+
+        if (p[l2] != '.') {
+
+            bool b = false;
+            int i = l1;
+
+            while ((i < s.length() && s[i] == s[l1]) && s[i] == p[l2]) {
+                b = b || rec(s, p, i, l2 + 2, dp);
+                i++;
+            }
+            b = b || rec(s, p, i, l2 + 2, dp);
+            dp[l1][l2] = b ? 1 : 0;
+            return b;
+
+        } else {
+
+            bool b = false;
+            int i = l1;
+            while (i <= s.length()) {
+                b = b || rec(s, p, i, l2 + 2, dp);
+                i++;
+            }
+            dp[l1][l2] = b ? 1 : 0;
+            return b;
+        }
+
+    } else {
+        
+        if (l1 < s.length() && (p[l2] == '.' || s[l1] == p[l2])) {
+            bool b = rec(s, p, l1 + 1, l2 + 1, dp);
+            dp[l1][l2] = b ? 1 : 0;
+            return b;
+        }
+        dp[l1][l2] = 0;
+        return false;
+    }
+    dp[l1][l2] = 1;
+    return true;
+}
+
+bool isMatch(string s, string p) {
+    // rearrange vector size if needed
+    vector<vector<int>> dp(21, vector<int>(21, -1));
+    return rec(s, p, 0, 0, dp);
+}
+
+int main ()
+{
+    cout << isMatch("bccbbabcaccacbcacaa", ".*b.*c*.*.*.c*a*.c");
+    return 0;
+}
