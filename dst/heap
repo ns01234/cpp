@@ -1,0 +1,258 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+class Heap {
+    private:
+        int capacity;
+        int size;
+        int* arr;
+    public:
+        Heap(int cap) {
+            capacity = cap;
+            size = 0;
+            arr = new int[cap];
+        }
+        void heapifyUp(int i);
+        void heapifyDown(int i);
+        void insert(int data);
+        void remove(int data);
+        void build(vector<int>);
+        void update(int data, int old);
+        int search(int data);
+        void print();
+};
+
+void Heap::heapifyUp(int i)
+{   
+    if (i >= size) {
+        cout << "invalid index\n";
+        return;
+    }
+
+    while (i != 0) {
+
+        int parIndex = (i - 1) / 2;
+
+        if (arr[i] > arr[parIndex]) {
+
+            swap(arr[i], arr[parIndex]);
+            i = parIndex;
+
+        } else {
+            break;
+        }
+    }
+}
+
+void Heap::heapifyDown(int i)
+{
+    while (i < size) {
+
+        int largest = i;
+        int lc = 2 * i + 1;
+        int rc = 2 * i + 2;
+
+        if (lc < size && arr[lc] > arr[largest]) {
+            largest = lc;
+        }
+
+        if (rc < size && arr[rc] > arr[largest]) {
+            largest = rc;
+        }
+
+        if (largest != i) {
+            swap(arr[i], arr[largest]);
+            i = largest;
+
+        } else {    
+            break;
+        }
+    }
+}
+
+void Heap::insert(int data)
+{   
+    if (size == capacity) {
+
+        cout << "no capacity\n";
+        return;
+    }
+        
+    arr[size] = data;
+    heapifyUp(size);
+    size++;
+}
+
+void Heap::remove(int data)
+{
+    int i = search(data);
+    if (i == -1) {return;}
+
+    arr[i] = arr[size - 1];
+    size--;
+
+    if (arr[i] > arr[(i - 1) / 2]) {
+        heapifyUp(i);
+    } else if (2 * i + 1 < size && arr[i] < arr[2 * i + 1]) {
+        heapifyDown(i);
+    } else if (2 * i + 2 < size && arr[i] < arr[2 * i + 2]) {
+        heapifyDown(i);
+    }
+}
+
+int Heap::search(int data)
+{
+    queue<int> q;
+    q.push(0);
+    int i = -1;
+
+    while (!q.empty()) {
+
+        i = q.front();
+        q.pop();
+
+        if (arr[i] == data) {
+            return i;
+        }
+
+        if (2 * i + 1 < size)
+            q.push(2 * i + 1);
+
+        if (2 * i + 2 < size)
+            q.push(2 * i + 2);  
+    }
+    return -1;
+}
+
+void Heap::update(int data, int old)
+{
+    int i = search(old);
+    if (i == -1) {
+        cout << "no element with given data\n";
+        return;
+    }
+    arr[i] = data;
+    if (arr[i] > arr[(i - 1) / 2]) {
+        heapifyUp(i);
+    } else if (2 * i + 1 < size && arr[i] < arr[2 * i + 1]) {
+        heapifyDown(i);
+    } else if (2 * i + 2 < size && arr[i] < arr[2 * i + 2]) {
+        heapifyDown(i);
+    }
+}
+
+void Heap::print()
+{   
+    if (size == 0)
+        return;
+    
+    queue<int> q;
+    q.push(0);
+    int i = -1;
+
+    while (!q.empty()) {
+
+        i = q.front();
+        q.pop();
+
+        cout << arr[i] << ' ';
+
+        if (2 * i + 1 < size)
+            q.push(2 * i + 1);
+
+        if (2 * i + 2 < size)
+            q.push(2 * i + 2);
+    }
+    cout << '\n';
+}
+
+void Heap::build(vector<int> v)
+{
+    // v = {1,4,6,4,66,51,23,31,42};
+
+    int i = v.size() - 1;
+    int vsize = v.size();
+    while (i != -1) {
+        
+        int j = i;
+
+        while (j < vsize) {
+
+            int largest = j;
+            int lc = 2 * j + 1;
+            int rc = 2 * j + 2;
+
+            if (lc < vsize && v[lc] > v[largest]) {
+                largest = lc;
+            }
+            if (rc < vsize && v[rc] > v[largest]) {
+                largest = rc;
+            }
+
+            if (j != largest) {
+                swap(v[j], v[largest]);
+                j = largest;
+            } else {
+                break;
+            }
+        }
+        i--;
+    }
+    this->size = vsize;
+    for (int j = 0; j < vsize; ++j) {
+
+        arr[j] = v[j];
+    }
+}
+
+class Node {
+
+    public:
+        int priority;
+        int data;
+        
+    Node(int a, int b) {
+        priority = a;
+        data = b;
+    }
+};
+
+struct CompareNodes {
+    bool operator()(const Node& a, const Node& b) {
+        return a.priority < b.priority;
+    }
+};
+
+int main ()
+{
+    vector<int> v = {1,4,6,4,66,51,23,31,42};
+    Heap* h = new Heap(30);
+    h->build(v);
+    h->print();
+    h->remove(51);
+    h->print();
+    h->update(2,31);
+    h->print();
+
+    priority_queue<Node, vector<Node>, CompareNodes> pq;
+    Node a(1,2);
+    Node b(1,1);
+    Node c(2,3);
+    Node d(1,5);
+    Node e(2,6);
+    pq.push(a);
+    pq.push(b);
+    pq.push(c);
+    pq.push(d);
+    pq.push(e);
+
+    while (!pq.empty()) {
+
+        cout << pq.top().data << ' ';
+        pq.pop();
+    }
+
+    return 0;
+}
