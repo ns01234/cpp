@@ -97,7 +97,7 @@ DoublySkipList_Node::DoublySkipList_Node(Employee *data)
     this->below = nullptr;
     this->next = nullptr;
 }
-    // node destructor, memory handled in list class
+    // node destructor, memory handled in the list class
 DoublySkipList_Node::~DoublySkipList_Node() {}
     // return node's employee
 Employee* DoublySkipList_Node::get_data()
